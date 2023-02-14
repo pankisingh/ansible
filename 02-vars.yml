@@ -1,0 +1,9 @@
+- name: Demo on veriables
+  hosts: all
+  vars:
+    URL: play.google.com   
+  tasks:
+     - name: Print veriable
+       ansible.builtin.debug
+        msg: "URL ={{URL}}"
+         
