@@ -8,6 +8,7 @@
         msg: "URL = {{URL}}"
     - name: Print a task Variable
       ansible.builtin.debug:
-      msg: "URL = {{URL}}"
-      vars: task.google.com
+        msg: "URL = {{URL}}"
+      vars:
+        URL: task.google.com
   
