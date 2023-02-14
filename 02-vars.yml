@@ -41,11 +41,11 @@
 -  name: Demo on register veriable
    hosts: all
    tasks: 
-      - name: Print register veriable
-        ansiblebuiltin.shell: uptime
-        register: out
+     - name: Print register veriable
+       ansiblebuiltin.shell: uptime
+       register: out
 
-      - name: Print output
-        ansible.builtin.debug:
-          msg: "out"
+     - name: Print output
+       ansible.builtin.debug:
+         msg: "out"
 
