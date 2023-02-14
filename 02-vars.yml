@@ -59,6 +59,6 @@
 
 - name: Demo on variables
   hosts: all
-   roles:
-     - name: demo
+  roles:
+    - name: demo
      
