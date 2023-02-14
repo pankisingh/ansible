@@ -46,6 +46,10 @@
       register: out
 
     - name: Set a variable
+     ansible.builtin.debug:
+        msg: "{{out}}"  
+
+    - name: Set a variable
       ansible.builtin.set_fact:
         UPTIME: "{{out.stdout}}"
 
