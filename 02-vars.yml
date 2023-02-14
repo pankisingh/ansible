@@ -38,14 +38,17 @@
         ansible.builtin.debug:
           msg: "hostname {{ansible_fqdn}}"
 
--  name: Demo on register veriable
-   hosts: all
-   tasks: 
-     - name: Print register veriable
-       ansiblebuiltin.shell: uptime
-       register: out
+- name: Demo on register variables
+  hosts: all
+  tasks:
+    - name: Run uptime command
+      ansible.builtin.shell: uptime
+      register: out
 
-     - name: Print output
-       ansible.builtin.debug:
-         msg: "out"
+    - name: Set a variable
+      ansible.builtin.set_fact:
+        UPTIME: "{{out.stdout}}"
 
+    - name: Print output
+      ansible.builtin.debug:
+        msg: "{{UPTIME}}"
