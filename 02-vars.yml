@@ -46,7 +46,7 @@
       register: out
 
     - name: Set a variable
-     ansible.builtin.debug:
+      ansible.builtin.debug:
         msg: "{{out}}"  
 
     - name: Set a variable
