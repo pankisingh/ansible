@@ -30,3 +30,11 @@
       ansible.builtin.debug:
         msg: "URL = {{URL}}"
 
+
+-  name: Demo on facts
+   hosts: all
+   tasks:
+      - name: Print facts veriable
+        ansible.builtin.debug:
+          msg: "hostname {{ansible_fqdn}}"
+
