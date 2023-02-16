@@ -1,0 +1,24 @@
+
+#    # curl -s -L -o /tmp/mysql.zip "https://github.com/roboshop-devops-project/mysql/archive/main.zip"
+#    Load the schema for Services.
+#
+#    # cd /tmp
+#    # unzip mysql.zip
+#    # cd mysql-main
+#  # mysql -uroot -pRoboShop@1 <shipping.sql
+
+- name: Setup MySQL Repo file
+  copy:
+    src: mysql.repo
+    dest: /etc/yum.repos.d/mysql.repo
+
+- name: Install MySQL Server
+  yum:
+    name: [ "mysql-community-server", "MySQL-python" ]
+    state: present
+
+- name: Start MySQL Service
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
