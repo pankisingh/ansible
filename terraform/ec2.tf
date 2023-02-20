@@ -36,7 +36,8 @@ resource "aws_route53_record" "records" {
   type                      = "A"
   zone_id                   = "Z064287532Z1XRTBPYJPM"
   ttl                       = 300
-  records                   = [element(aws_spot_instance_request.cheap_worker.*.private_ip, count.index)]
+  records                  = [element(aws_instance.app-instances.*.private_ip, count.index)]
+  //records                   = [element(aws_spot_instance_request.cheap_worker.*.private_ip, count.index)]
 }
 
 resource "local_file" "inventory-file" {
