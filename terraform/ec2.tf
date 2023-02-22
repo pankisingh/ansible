@@ -12,8 +12,19 @@
 #   }
 # }
 
+resource "aws_instance" "app-instances" {
+  count                       = length(var.APP_COMPONENTS)
+  ami                         = "ami-0bb6af715826253bf"
+  instance_type               = "t3.micro"
+  vpc_security_group_ids      = ["sg-0d00b6b80c9e9b60c"]
+    tags                      = {
+      Name                    = "${element(var.APP_COMPONENTS, count.index)}-${var.ENV}"
+      Monitor                 = "yes"
+    }
+}
+
 resource "aws_instance" "db-instances" {
-  count                       = length(var.DB_COMPONENTS)
+ count                        =  length(var.DB_COMPONENTS)
  ami                          = "ami-0bb6af715826253bf"
   instance_type               = "t3.micro"
   vpc_security_group_ids      = ["sg-0017bec6ae883767e"]
@@ -30,14 +41,35 @@ resource "aws_instance" "db-instances" {
 # }
 
 
-resource "aws_route53_record" "records" {
-  count                     = local.LENGTH
-  name                      = element(var.COMPONENTS, count.index)
+//resource "aws_route53_record" "records" {
+//  count                     = local.LENGTH
+//  name                      = element(var.COMPONENTS, count.index)
+//  type                      = "A"
+//  zone_id                   = "Z064287532Z1XRTBPYJPM"
+//  ttl                       = 300
+//  records                  = [element(aws_instance.app-instances.*.private_ip, count.index)]
+//records                   = [element(aws_spot_instance_request.cheap_worker.*.private_ip, count.index)]
+//}
+
+
+resource "aws_route53_record" "app-records" {
+  count                     = length(var.APP_COMPONENTS)
+  name                      = "${element(var.APP_COMPONENTS, count.index)}-${var.ENV}"
   type                      = "A"
   zone_id                   = "Z064287532Z1XRTBPYJPM"
   ttl                       = 300
-  records                  = [element(aws_instance.app-instances.*.private_ip, count.index)]
-  //records                   = [element(aws_spot_instance_request.cheap_worker.*.private_ip, count.index)]
+  //records                   = [element(aws_instance.instances.*.private_ip, count.index)]
+  records                   = [element(aws_instance.app-instances.*.private_ip, count.index)]
+}
+
+resource "aws_route53_record" "db-records" {
+  count                     = length(var.DB_COMPONENTS)
+  name                      = "${element(var.DB_COMPONENTS, count.index)}-${var.ENV}"
+  type                      = "A"
+  zone_id                   = "Z064287532Z1XRTBPYJPM"
+  ttl                       = 300
+  //records                   = [element(aws_instance.instances.*.private_ip, count.index)]
+  records                   = [element(aws_instance.db-instances.*.private_ip, count.index)]
 }
 
 # resource "local_file" "inventory-file" {
@@ -51,6 +83,10 @@ resource "local_file" "inventory-file" {
   filename    = "/tmp/inv-roboshop-${var.ENV}"
 }
 
+#locals {
+#  LENGTH    = length(var.COMPONENTS)
+#}
+
 locals {
-  LENGTH    = length(var.COMPONENTS)
+  COMPONENTS = concat(aws_instance.db-instances.*.private_ip, aws_instance.app-instances.*.private_ip)
 }
