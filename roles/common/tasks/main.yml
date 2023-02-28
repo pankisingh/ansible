@@ -1,3 +1,4 @@
+#meta task
 - name: Copy Hostname Script
   copy:
     src: set-hostname.sh
